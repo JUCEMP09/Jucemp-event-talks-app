@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNexus 2026 | Technical Event Schedule</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --lunch-bg: #1e3a8a;
+            --transition-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .event-meta {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .search-container {
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+            margin-bottom: 2rem;
+        }
+
+        #categorySearch {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            background-color: #1e293b;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        #categorySearch:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .schedule {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .talk-card, .break-card {
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, opacity 0.3s;
+            position: relative;
+        }
+
+        .talk-card {
+            background-color: var(--card-bg);
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .talk-card:hover {
+            transform: translateX(5px);
+        }
+
+        .break-card {
+            background-color: var(--transition-color);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .lunch-card {
+            background-color: var(--lunch-bg);
+            border-left: 4px solid #60a5fa;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .time-box {
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        .talk-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .speakers {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .category-tag {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none;
+            opacity: 0;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>TechNexus 2026</h1>
+        <p class="event-meta">June 11, 2026 • Single Track • 6 Technical Deep Dives</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="categorySearch" placeholder="Filter talks by category (e.g. AI, Cloud, Security)..." oninput="filterSchedule()">
+    </div>
+
+    <div class="schedule" id="scheduleContainer">
+        <!-- JS will populate this -->
+    </div>
+</div>
+
+<script>
+    const talks = [
+        {
+            title: "The Future of WASM",
+            speakers: ["Alice Chen"],
+            categories: ["Web", "Performance"],
+            description: "Explore how WebAssembly is moving beyond the browser to revolutionize server-side computing and edge workloads.",
+            duration: "1 hour",
+            type: "talk"
+        },
+        {
+            title: "Transition Break",
+            type: "break",
+            duration: "10 mins"
+        },
+        {
+            title: "Scaling Microservices",
+            speakers: ["Bob Smith", "Jane Doe"],
+            categories: ["Backend", "Cloud"],
+            description: "A practical guide to managing distributed systems at scale, focusing on observability and service mesh patterns.",
+            duration: "1 hour",
+            type: "talk"
+        },
+        {
+            title: "Transition Break",
+            type: "break",
+            duration: "10 mins"
+        },
+        {
+            title: "AI in Production",
+            speakers: ["Charlie Day"],
+            categories: ["AI", "ML"],
+            description: "Bridge the gap between experimental notebooks and scalable production environments using modern MLOps tools.",
+            duration: "1 hour",
+            type: "talk"
+        },
+        {
+            title: "Lunch Break",
+            type: "lunch",
+            duration: "1 hour"
+        },
+        {
+            title: "Security by Design",
+            speakers: ["Diana Prince"],
+            categories: ["Security", "DevSecOps"],
+            description: "Shift left by integrating automated security checks directly into your CI/CD pipelines without slowing down developers.",
+            duration: "1 hour",
+            type: "talk"
+        },
+        {
+            title: "Transition Break",
+            type: "break",
+            duration: "10 mins"
+        },
+        {
+            title: "Rust for Web Dev",
+            speakers: ["Ethan Hunt"],
+            categories: ["Language", "Systems"],
+            description: "Why Rust is becoming the preferred language for high-performance web backends and safety-critical infrastructure.",
+            duration: "1 hour",
+            type: "talk"
+        },
+        {
+            title: "Transition Break",
+            type: "break",
+            duration: "10 mins"
+        },
+        {
+            title: "Edge Computing 101",
+            speakers: ["Fiona Glenanne"],
+            categories: ["Infrastructure", "Edge"],
+            description: "Bringing compute closer to the user: Understanding the architecture of global edge networks.",
+            duration: "1 hour",
+            type: "talk"
+        }
+    ];
+
+    function formatTime(minutesSinceStart) {
+        const startHour = 10;
+        const totalMinutes = startHour * 60 + minutesSinceStart;
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours);
+        const displayMins = mins < 10 ? '0' + mins : mins;
+        return `${displayHours}:${displayMins} ${ampm}`;
+    }
+
+    function renderSchedule() {
+        const container = document.getElementById('scheduleContainer');
+        let currentMinutes = 0;
+
+        container.innerHTML = talks.map((item, index) => {
+            const startTimeStr = formatTime(currentMinutes);
+            let durationMins = item.type === 'break' ? 10 : 60;
+            const endTimeStr = formatTime(currentMinutes + durationMins);
+            
+            let html = '';
+            
+            if (item.type === 'talk') {
+                html = `
+                    <div class="talk-card" data-categories="${item.categories.join(',').toLowerCase()}">
+                        <div class="time-box">${startTimeStr} - ${endTimeStr}</div>
+                        <h2 class="talk-title">${item.title}</h2>
+                        <span class="speakers">By ${item.speakers.join(' & ')}</span>
+                        <p class="description">${item.description}</p>
+                        <div class="categories">
+                            ${item.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (item.type === 'lunch') {
+                html = `
+                    <div class="talk-card lunch-card">
+                        <div class="time-box">${startTimeStr} - ${endTimeStr}</div>
+                        <div>🍱 Lunch Break</div>
+                    </div>
+                `;
+            } else {
+                html = `
+                    <div class="break-card">
+                        ${startTimeStr} - ${endTimeStr} • ${item.title}
+                    </div>
+                `;
+            }
+
+            currentMinutes += durationMins;
+            return html;
+        }).join('');
+    }
+
+    function filterSchedule() {
+        const query = document.getElementById('categorySearch').value.toLowerCase();
+        const cards = document.querySelectorAll('.talk-card');
+        const breaks = document.querySelectorAll('.break-card');
+
+        // Show/Hide talk cards based on categories
+        cards.forEach(card => {
+            if (card.classList.contains('lunch-card')) return; // Always show lunch
+
+            const categories = card.getAttribute('data-categories');
+            if (query === '' || categories.includes(query)) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        // Hide breaks if the surrounding talks are hidden (simple logic)
+        // If query is active, we might want to hide breaks for a cleaner look
+        breaks.forEach(b => {
+            if (query !== '') {
+                b.classList.add('hidden');
+            } else {
+                b.classList.remove('hidden');
+            }
+        });
+    }
+
+    // Initial render
+    renderSchedule();
+</script>
+
+</body>
+</html>
